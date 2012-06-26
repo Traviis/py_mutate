@@ -2,6 +2,7 @@
 
 #Takes a word
 #applies common mutations to it and returns a list of them
+#returns a very large set of data 
 from leet_table import ltable
 
 def mutate(word,includeOriginal=True,leet=True):
@@ -10,4 +11,3 @@ def mutate(word,includeOriginal=True,leet=True):
         out.append(word)
     if leet:
         #do leet mutations
-    
