@@ -14,7 +14,7 @@ def bin_string_with_pad(s,leng=1):
     sv = s if s<=1 else bin_string_with_pad(s>>1) + str(s&1)
     return ("{0:0" + str(leng) + "d}").format(int(sv))
 
-def getLeet(word):
+def getLeet(word,runcaps=True):
 #This needs to be cleaned up; currently it generates every single possible table 
     def generate_tables(ltable):
         keys = sorted(ltable.keys()) 
@@ -34,7 +34,6 @@ def getLeet(word):
         return cur_table
 
     dictpos = reduce(operator.mul,[len(ltable[x]) for x in ltable if len(ltable[x]) > 0],1)
-    print dictpos
     outset = set()
     y = 0
     gen = generate_tables(ltable)
@@ -50,6 +49,9 @@ def getLeet(word):
                 if bset[i] == '1' and up_w1 in cur_table.keys():
                     newword = newword[0:i] + cur_table[up_w1] + newword[i+1:]
                     outset.add(newword)
+                    if runcaps:
+                        for capped in getCaps(newword):
+                            outset.add(capped)
         y += 1
     return list(outset)
 
@@ -87,7 +89,7 @@ def mutate(word,includeOriginal=True,leet=True,caps=True):
 if len(sys.argv) > 1:
     f = open(sys.argv[1],'r')
     for line in f:
-        for word in mutate(line.split('\n')[0],leet=False):
+        for word in mutate(line.split('\n')[0]):
             print word
 else:
     print "Supply wordlist as the first arguement"
