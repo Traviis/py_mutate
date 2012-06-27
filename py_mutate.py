@@ -4,10 +4,70 @@
 #applies common mutations to it and returns a list of them
 #returns a very large set of data 
 from leet_table import ltable
+import sys
+import operator
+import math
+import itertools
+
+
+def bin_string_with_pad(s,leng=1):
+    sv = s if s<=1 else bin_string_with_pad(s>>1) + str(s&1)
+    return ("{0:0" + str(leng) + "d}").format(int(sv))
+
+def getLeet(word):
+#This needs to be cleaned up; currently it generates every single possible table 
+    def generate_tables(ltable):
+        keys = sorted(ltable.keys()) 
+        cur_table = dict()
+        list_of_lists = list()
+        for key in keys:
+           needed_len = len(ltable[key.upper()])
+           list_of_lists.append([x for x in range(0,needed_len)])
+        vals = list(itertools.product(*list_of_lists))
+        return vals
+
+    def get_cur_table(curset,ltable):
+        keys = sorted(ltable.keys()) # not really neccisary
+        cur_table = dict()
+        for key_idx in range(0,len(curset)):
+            cur_table[keys[key_idx]] = ltable[keys[key_idx].upper()][curset[key_idx]]
+        return cur_table
+
+    dictpos = reduce(operator.mul,[len(ltable[x]) for x in ltable if len(ltable[x]) > 0],1)
+    print dictpos
+    outset = set()
+    y = 0
+    gen = generate_tables(ltable)
+    while y < dictpos: #dictpos was too big for range in some cases
+        #cur_table = get_table_state(ltable,y)
+        curset = gen[y]
+        cur_table = get_cur_table(curset,ltable)
+        for x in range(0,int(math.pow(2,len(word)))):
+           newword = word
+           bset = bin_string_with_pad(x,len(word))
+           for i in range(0,len(bset)):
+                up_w1 = word[i].upper()
+                if bset[i] == '1' and up_w1 in cur_table.keys():
+                    newword = newword[0:i] + cur_table[up_w1] + newword[i+1:]
+                    outset.add(newword)
+        y += 1
+    return list(outset)
+
 
 def mutate(word,includeOriginal=True,leet=True):
-    out = list()
+    out = set()
     if includeOriginal:
-        out.append(word)
+        out.add(word)
     if leet:
-        #do leet mutations
+        for x in getLeet(word):
+            out.add(x)
+    return out
+
+#default operation is to read the file in sys.stdin and print out all the mutations (per word)
+if len(sys.argv) > 1:
+    f = open(sys.argv[1],'r')
+    for line in f:
+        for word in mutate(line.split('\n')[0]):
+            print word
+else:
+    print "Supply wordlist as the first arguement"
