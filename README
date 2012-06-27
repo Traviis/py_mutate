@@ -1,1 +1,4 @@
 Py_mutate is a simple program that takes a base word, and gives a large set of variations on it, something commonly done with passwords.
+
+
+Given the current state, lists are not run through multiple times through different filters. For example, if you use the 'l33t' filter the resulting set is not put through the numbers filter. The easiest thing to do is add in your own code to do this or to output the resulting text and then run that through the program again.

@@ -73,7 +73,7 @@ def getCaps(word):
         
 
 
-def mutate(word,includeOriginal=True,leet=True,caps=True):
+def mutate(word,includeOriginal=True,leet=True,caps=True,numbers=True):
     out = set()
     if includeOriginal:
         out.add(word)
@@ -83,7 +83,24 @@ def mutate(word,includeOriginal=True,leet=True,caps=True):
     if caps:
         for x in getCaps(word):
             out.add(x)
+    if numbers:
+        for x in addnumbers(word):
+            out.add(x)
     return out
+
+def addnumbers(word,prefix=True,postfix=True,maxnumber=99): #common for birthyears
+       out = set()
+       if prefix:
+            for n in range(0,maxnumber):
+                out.add(str(n)+word)
+       if postfix:
+            for n in range(0,maxnumber):
+                out.add(word+str(n))
+       if postfix and prefix:
+          lists = [ [x for x in range(maxnumber)],[x for x in range(maxnumber)] ] 
+          all_combo = itertools.product(*lists)
+          print all_combo
+       return out
 
 #default operation is to read the file in sys.stdin and print out all the mutations (per word)
 if len(sys.argv) > 1:
