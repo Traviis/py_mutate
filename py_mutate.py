@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
-#Takes a word
-#applies common mutations to it and returns a list of them
-#returns a very large set of data 
+#Takes a wordlist
+#applies common mutations to each word and returns a list of them
+#single words can return upwords of >2000 results depending on settings.
 from leet_table import ltable
 import sys
 import operator
@@ -38,7 +38,6 @@ def getLeet(word,runcaps=True):
     y = 0
     gen = generate_tables(ltable)
     while y < dictpos: #dictpos was too big for range in some cases
-        #cur_table = get_table_state(ltable,y)
         curset = gen[y]
         cur_table = get_cur_table(curset,ltable)
         for x in range(0,int(math.pow(2,len(word)))):
@@ -88,7 +87,7 @@ def mutate(word,includeOriginal=True,leet=True,caps=True,numbers=True):
             out.add(x)
     return out
 
-def addnumbers(word,prefix=True,postfix=True,maxnumber=99): #common for birthyears
+def addnumbers(word,prefix=True,postfix=True,maxnumber=1000): #common for birthyears
        out = set()
        if prefix:
             for n in range(0,maxnumber):
