@@ -53,13 +53,33 @@ def getLeet(word):
         y += 1
     return list(outset)
 
+def getCaps(word):
+    #Get all upper and lower case possibilities
+    out = set()
+    lower = word.lower()
+    for x in range(0,int(math.pow(2,len(word)))):
+        bset = bin_string_with_pad(x,len(word))
+        #1's are caps, 0's are lower
+        newword = ''
+        for i in range(0,len(bset)):
+            if bset[i] == '1':
+               newword += word[i].upper()
+            else:
+                newword += word[i]
+        out.add(newword)
+    return out
+        
 
-def mutate(word,includeOriginal=True,leet=True):
+
+def mutate(word,includeOriginal=True,leet=True,caps=True):
     out = set()
     if includeOriginal:
         out.add(word)
     if leet:
         for x in getLeet(word):
+            out.add(x)
+    if caps:
+        for x in getCaps(word):
             out.add(x)
     return out
 
@@ -67,7 +87,7 @@ def mutate(word,includeOriginal=True,leet=True):
 if len(sys.argv) > 1:
     f = open(sys.argv[1],'r')
     for line in f:
-        for word in mutate(line.split('\n')[0]):
+        for word in mutate(line.split('\n')[0],leet=False):
             print word
 else:
     print "Supply wordlist as the first arguement"
