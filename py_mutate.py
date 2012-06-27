@@ -40,7 +40,10 @@ def getLeet(word,runcaps=True):
     while y < dictpos: #dictpos was too big for range in some cases
         curset = gen[y]
         cur_table = get_cur_table(curset,ltable)
-        for x in range(0,int(math.pow(2,len(word)))):
+        maxn = int(math.pow(2,len(word)))
+        x = 0
+        #for x in range(0,int(math.pow(2,len(word)))):
+        while x < maxn:
            newword = word
            bset = bin_string_with_pad(x,len(word))
            for i in range(0,len(bset)):
@@ -51,6 +54,7 @@ def getLeet(word,runcaps=True):
                     if runcaps:
                         for capped in getCaps(newword):
                             outset.add(capped)
+           x += 1
         y += 1
     return list(outset)
 
@@ -58,7 +62,10 @@ def getCaps(word):
     #Get all upper and lower case possibilities
     out = set()
     lower = word.lower()
-    for x in range(0,int(math.pow(2,len(word)))):
+    x = 0
+    maxx = int(math.pow(2,len(word)))
+    #for x in range(0,int(math.pow(2,len(word)))):
+    while x < maxx: 
         bset = bin_string_with_pad(x,len(word))
         #1's are caps, 0's are lower
         newword = ''
@@ -67,6 +74,7 @@ def getCaps(word):
                newword += word[i].upper()
             else:
                 newword += word[i]
+        x += 1
         out.add(newword)
     return out
         
@@ -103,7 +111,11 @@ def addnumbers(word,prefix=True,postfix=True,maxnumber=1000): #common for birthy
 
 #default operation is to read the file in sys.stdin and print out all the mutations (per word)
 if len(sys.argv) > 1:
-    f = open(sys.argv[1],'r')
+    if sys.argv[1] == '-':
+        #stdin
+        f = sys.stdin
+    else:
+        f = open(sys.argv[1],'r')
     for line in f:
         for word in mutate(line.split('\n')[0]):
             print word
